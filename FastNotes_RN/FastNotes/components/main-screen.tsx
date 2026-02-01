@@ -1,15 +1,31 @@
+import { useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import CreateNoteWindow from "./create-note-popup-window";
 
 export default function MainScreen() {
-  return (
-    <View style={styles.container}>
-      {/* Your screen content */}
+    const [showCreateNote, setShowCreateNote] = useState(false);
 
-      <TouchableOpacity style={styles.fab}>
-        <Text style={styles.fabText}>+</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    return (
+
+        <View style={{ flex: 1 }}>
+            {/* FAB */}
+            <TouchableOpacity
+                style={styles.fab}
+                onPress={() => {
+                    console.log("FAB PRESSED");
+                    setShowCreateNote(true);
+                }}
+                >
+                <Text style={styles.fabText}>+</Text>
+            </TouchableOpacity>
+
+            {/* Popup */}
+            <CreateNoteWindow
+                visible={showCreateNote}
+                onClose={() => setShowCreateNote(false)}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
