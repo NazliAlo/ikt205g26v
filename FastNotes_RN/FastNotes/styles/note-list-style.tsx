@@ -10,4 +10,10 @@ export const listStyle = StyleSheet.create({
     fontSize: 16,
     color: "#fff"
   },
+  emptyList:{
+    fontSize: 25,
+    fontWeight: "600",
+    color: "#fff",
+    padding: 12,
+  }
 });
