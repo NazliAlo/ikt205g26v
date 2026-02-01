@@ -4,9 +4,10 @@ import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 
 type NotesListProps = {
   notes: Note[];
+  onPressNote: (note: Note) => void;
 };
 
-export default function NotesList({ notes }: NotesListProps) {
+export default function NotesList({ notes, onPressNote }: NotesListProps) {
 
     if (notes.length === 0) {
         return <Text style={listStyle.emptyList}>Your note list is empty!</Text>;
@@ -17,7 +18,7 @@ export default function NotesList({ notes }: NotesListProps) {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
             <Pressable
-                onPress={() => console.log("Pressed:", item.id)}
+                onPress={() => onPressNote(item)}
                 style={({ pressed }) => [
                     listStyle.item,
                     pressed && { opacity: 0.6 },
