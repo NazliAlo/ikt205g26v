@@ -34,6 +34,13 @@ export const popupWindow = StyleSheet.create({
   padding: 12,
   marginBottom: 12,
   },
+  
+  label: {
+  fontWeight: "600",
+  fontSize: 14,
+  marginBottom: 4,
+  color: "#111",
+},
 
   textArea: {
     width: "100%",
@@ -64,18 +71,18 @@ export const popupWindow = StyleSheet.create({
     flex: 1,
     padding: 12,
     borderRadius: 8,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#eee",
     marginLeft: 8,
     alignItems: "center",
   },
 
   cancelText: {
-    color: "#333",
+    color: "#c01717",
     fontWeight: "600",
   },
 
   saveText: {
-    color: "#fff",
+    color: "#379041",
     fontWeight: "600",
   },
 

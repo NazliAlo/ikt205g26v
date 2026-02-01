@@ -13,7 +13,6 @@ export default function NotesList({ notes }: NotesListProps) {
     }
     return (
         <FlatList
-        
         data={notes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (

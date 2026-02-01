@@ -8,6 +8,17 @@ import { Note } from "@/models/note";
 export default function MainScreen() {
     const [showCreateNote, setShowCreateNote] = useState(false);
     const [noteList, setNotes] = useState<Note[]>([]);
+    
+    function handleSaveNote(title: string, description: string) {
+        console.log("SAVE:", title, description);
+        const newNote: Note = {
+            id: Date.now().toString(), // unik id
+            title,
+            description,
+        };
+    // legg til notatet i listen
+    setNotes(prevNotes => [newNote, ...prevNotes]); // legger nye øverst
+    }
 
 
     return (
@@ -29,7 +40,8 @@ export default function MainScreen() {
             {/* Popup */}
             <CreateNoteWindow
                 visible={showCreateNote}
-                onClose={() => setShowCreateNote(false)}
+                onClose={() => setShowCreateNote(false)} 
+                onSave={handleSaveNote}             
             />
         </View>
     );
