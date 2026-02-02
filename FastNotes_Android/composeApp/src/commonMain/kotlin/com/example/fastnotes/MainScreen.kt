@@ -23,11 +23,7 @@ import com.example.fastnotes.model.Note
 
 fun MainScreen() {
     val notes = remember {
-        mutableStateListOf<Note>(
-            // Note(1, "Handleliste", "Melk, egg, brød"),
-            // Note(2, "Ideer", "Lag FastNotes appen ferdig"),
-            // Note(3, "Påminnelse", "Drikk vann")
-        )
+        mutableStateListOf<Note>()
     }
 
     var showNewNote by remember { mutableStateOf(false) }
