@@ -26,7 +26,7 @@ export default function MainScreen() {
     return (
 
         <View style={{ flex: 1 }}>
-            <Text style ={mainScreanStyle.headerTitle} >My notes</Text>
+            <Text style ={mainScreanStyle.headerTitle} >My Notes</Text>
            <NotesList 
                 notes = {noteList}
                 onPressNote={(note: Note) => router.push({ pathname: '/noteDetailScreen', params: { note: JSON.stringify(note) } })}

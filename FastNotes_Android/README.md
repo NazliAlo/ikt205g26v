@@ -1,4 +1,4 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
+FastNotes is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
@@ -14,7 +14,7 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM
 
 ### Build and Run Android Application
 
-To build and run the development version of the Android app, use the run configuration from the run widget
+To build and run the development version of the FastNotes app, you can press the play arrow in Android Studio, or use the run configuration from the run widget
 in your IDE’s toolbar or build it directly from the terminal:
 - on macOS/Linux
   ```shell
@@ -25,6 +25,7 @@ in your IDE’s toolbar or build it directly from the terminal:
   .\gradlew.bat :composeApp:assembleDebug
   ```
 
+To run the android application on Android device, you can do it either on simulator in Android Studio by building one from tools -> device manager, or on physical device by connecting it into your machine by Wifi or cable.
 ### Build and Run Desktop (JVM) Application
 
 To build and run the development version of the desktop app, use the run configuration from the run widget
@@ -60,17 +61,3 @@ in your IDE's toolbar or run it directly from the terminal:
     ```shell
     .\gradlew.bat :composeApp:jsBrowserDevelopmentRun
     ```
-
-### Build and Run iOS Application
-
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
-
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
