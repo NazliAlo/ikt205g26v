@@ -1,3 +1,4 @@
+import SignOutButton from "@/components/sosial-auth-buttons/sign-out-button";
 import { Note } from "@/models/note";
 import { mainScreanStyle } from "@/styles/main-screen-style";
 import { router } from "expo-router";
@@ -49,6 +50,7 @@ export default function MainScreen() {
                 onClose={() => setShowCreateNote(false)} 
                 onSave={handleSaveNote}             
             />
+            <SignOutButton/>
         </View>
     );
 }
