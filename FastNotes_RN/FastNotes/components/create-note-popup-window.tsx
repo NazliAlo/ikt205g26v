@@ -1,6 +1,7 @@
+import { supabase } from '@/lib/supabase';
 import { popupWindow } from "@/styles/create-note-style";
 import { useEffect, useState } from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, TextInput } from "react-native";
+import { KeyboardAvoidingView, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 type CreateNoteProps = {
   visible: boolean;
@@ -23,9 +24,33 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
   
   }, [visible]);
   if (!visible) return null;
+
   
-  function handleSave() {
+  async function handleSave() {
     if (title.trim().length === 0) return;
+
+    const { data: { session }, error } = await supabase.auth.getSession()
+    if (error) {
+      console.error("Failed to get session:", error.message)
+    return
+    }
+
+    if (!session) return
+
+    const { error: insertError } = await supabase
+      .from('Notes')
+      .insert([
+        {
+        title: title,
+        description: description,
+        userId: session.user.id
+        }
+  ])
+
+    if (insertError) {
+      console.error("Failed to save note:", insertError.message)
+      }
+    
     onSave(title, description);
     onClose();
   }
