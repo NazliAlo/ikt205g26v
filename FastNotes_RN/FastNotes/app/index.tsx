@@ -1,9 +1,13 @@
 
+import MainScreen from '@/app/main-screen';
+import { useAuthContext } from '@/hooks/auth-context';
 import { StyleSheet } from 'react-native';
-import MainScreen from '@/components/main-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+
+
 export default function HomeScreen() {
+  const {profile} = useAuthContext();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {<MainScreen/>}

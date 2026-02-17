@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { mainScreanStyle } from "@/styles/main-screen-style"
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import CreateNoteWindow from "./create-note-popup-window";
-import NotesList from "./note-list";
 import { Note } from "@/models/note";
+import { mainScreanStyle } from "@/styles/main-screen-style";
 import { router } from "expo-router";
+import { useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import CreateNoteWindow from "../components/create-note-popup-window";
+import NotesList from "../components/note-list";
 
 export default function MainScreen() {
     const [showCreateNote, setShowCreateNote] = useState(false);
