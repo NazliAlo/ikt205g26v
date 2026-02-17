@@ -2,6 +2,7 @@
 import { AuthContext } from '@/hooks/auth-context'
 import { supabase } from '@/lib/supabase'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { router } from 'expo-router'
 import React, { useContext, useState } from 'react'
 import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
 
@@ -46,13 +47,16 @@ export default function LoginScreen({ navigation }: Props) {
       email: email,
       password: password,
     })
-    console.log("my session:", session)
     if (error) Alert.alert('Feil', error.message)
     
-    
+    if (session?.access_token != null){
+      console.log("session not null")
+      router.replace('/')
+    }
+      
+
     // session oppdateres automatisk av AuthProvider
   }
-
   return (
     <View style={styles.container}>
       <TextInput
