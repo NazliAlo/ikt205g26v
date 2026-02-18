@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { Note } from '@/models/note';
 import { popupWindow } from "@/styles/create-note-style";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -6,7 +7,7 @@ import { KeyboardAvoidingView, Modal, Platform, Text, TextInput, TouchableOpacit
 type CreateNoteProps = {
   visible: boolean;
   onClose: () => void;
-  onSave: (title: string, description: string) => void;
+  onSave: (newNote: Note) => void;
 };
 
 export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNoteProps) {
@@ -26,32 +27,33 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
   if (!visible) return null;
 
   
-  async function handleSave() {
+   async function handleSave() {
     if (title.trim().length === 0) return;
 
-    const { data: { session }, error } = await supabase.auth.getSession()
-    if (error) {
-      console.error("Failed to get session:", error.message)
-    return
-    }
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) return;
 
-    if (!session) return
-
-    const { error: insertError } = await supabase
+    const { data, error: insertError } = await supabase
       .from('Notes')
       .insert([
         {
-        title: title,
-        description: description,
-        userId: session.user.id
+          title,
+          description,
+          userId: session.user.id,
+          updatedAt: new Date()
         }
-  ])
+      ])
+      .select(); // hent hele raden tilbake
 
     if (insertError) {
-      console.error("Failed to save note:", insertError.message)
-      }
-    
-    onSave(title, description);
+      console.error("Failed to save note:", insertError.message);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      onSave(data[0]); // send hele notatet tilbake til MainScreen
+    }
+
     onClose();
   }
 

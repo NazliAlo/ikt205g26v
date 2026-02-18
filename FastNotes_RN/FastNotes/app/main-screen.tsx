@@ -47,26 +47,10 @@ export default function MainScreen() {
         }
     }
 
-async function handleSaveNote(title: string, description: string) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) return;
-
-  const { data, error } = await supabase.from("Notes").insert([
-    {
-      title,
-      description,
-      userId: session.user.id,
-      updatedAt: new Date()
-    }
-    ]).select(); 
-
-  if (error) {
-    console.error("Failed to insert note:", error.message);
-    return;
+async function handleSaveNote(newNote: Note) {
+    setNotes(prevNotes => [newNote, ...prevNotes]); // legg til på toppen
+    setShowCreateNote(false);
   }
-  setRefresh(prev => prev + 1);
-  setShowCreateNote(false);
-}
 
 
 return (
