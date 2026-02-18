@@ -121,18 +121,22 @@ export default function NoteDetailScreen() {
         <Text style={styles.date}>
           Updated at: {new Date(note.updatedAt).toLocaleString()}
         </Text>
-      </View>
-    </ScrollView>
 
-    {/* Buttons */}
-    {currentUserId === note.userId && (
+         {currentUserId === note.userId && (
       <TouchableOpacity
     style={styles.editButton}
     onPress={isEditing ? handleUpdate : () => setIsEditing(true)}
      >
-    <Text style={styles.backButtonText}>{isEditing ? "Save" : "Edit"}</Text>
+    <Text style={styles.backButtonText}>{isEditing ? "Save" : "Update"}</Text>
     </TouchableOpacity>
     )}
+
+        
+      </View>
+    </ScrollView>
+
+    {/* Buttons */}
+   
 
     {currentUserId === note.userId && (
       <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
   date: { fontSize: 14, color: '#666' },
   backButton: {
     position: "absolute",
-    bottom: 50,      // place it near the bottom
+    bottom: 30,      // place it near the bottom
     right: 24,       // same as FAB for consistency
     width: 100,      // wider for text
     height: 50,
@@ -188,21 +192,18 @@ const styles = StyleSheet.create({
   },
 
   editButton: {
-  position: "absolute",
-  bottom: 50,
-  left: 24,
-  width: 100,
-  height: 50,
-  borderRadius: 25,
   backgroundColor: "#4F46E5",
-  justifyContent: "center",
-  alignItems: "center",
+  borderRadius: 8,
+  paddingVertical: 10,
+  paddingHorizontal: 12,
+  alignSelf: "flex-start",
+  marginTop: 20, 
 },
 
 deleteButton: {
   position: "absolute",
-  bottom: 50,
-  left: 140, // plasser ved siden av Edit-knappen
+  bottom: 30,
+  left: 30, // plasser ved siden av Edit-knappen
   width: 100,
   height: 50,
   borderRadius: 25,

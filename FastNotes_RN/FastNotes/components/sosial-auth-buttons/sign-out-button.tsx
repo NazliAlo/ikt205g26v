@@ -5,7 +5,7 @@ import { Alert, Pressable, StyleSheet } from 'react-native'
 export default function SignOutButton() {
   const logout = async () => {
     await supabase.auth.signOut()
-    Alert.alert('Suksess', 'Du er logget ut')
+    Alert.alert('Success', 'You are logged out')
   }
 
   return (

@@ -4,9 +4,18 @@ import { supabase } from '@/lib/supabase'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { router } from 'expo-router'
 import React, { useContext, useState } from 'react'
-import { Alert, Button, StyleSheet, TextInput, View } from 'react-native'
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity
+} from 'react-native'
 
-// Definer stack-parametre
+// Stack param definitions
 type RootStackParamList = {
   Login: undefined
   MainScreen: undefined
@@ -20,80 +29,120 @@ export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  // Sign-up funksjon
+  // Sign-up function
   const signUp = async () => {
     if (!email || !password) {
-      Alert.alert('Feil', 'E-post og passord kan ikke være tomme')
+      Alert.alert('Error', 'Email and password cannot be empty')
       return
     }
 
     const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) Alert.alert('Feil', error.message)
-    else Alert.alert('Suksess', 'Bruker opprettet! Sjekk e-posten din.')
+    if (error) Alert.alert('Error', error.message)
+    else Alert.alert('Success', 'User created! Check your email.')
   }
 
-  // Login funksjon
+  // Login function
   const login = async () => {
-    console.log("login pressed")
     if (!email || !password) {
-      Alert.alert('Feil', 'E-post og passord kan ikke være tomme')
+      Alert.alert('Error', 'Email and password cannot be empty')
       return
     }
 
     const {
       data: { session },
       error,
-    } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
-    if (error) Alert.alert('Feil', error.message)
-    
-    if (session?.access_token != null){
-      console.log("session not null")
+    } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (error) Alert.alert('Error', error.message)
+    else if (session?.access_token) {
       router.replace('/')
     }
-      
-
-    // session oppdateres automatisk av AuthProvider
   }
+
   return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="E-post"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Passord"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      <Button title="Sign Up" onPress={signUp} />
-      <View style={{ height: 10 }} />
-      <Button title="Login" onPress={login} />
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>Welcome to Fast Notes!</Text>
+        <Text style={styles.subtitle}>
+          Please login or sign up if you don’t have an account
+        </Text>
+
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#888"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#888"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={login}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.subtitle}>OR</Text>
+
+        <TouchableOpacity style={styles.button} onPress={signUp}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     justifyContent: 'center',
+    backgroundColor: '#121212',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#ccc',
+    textAlign: 'center',
+    marginBottom: 30,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    color: "white",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    borderColor: '#555',
+    backgroundColor: '#1c1c1c',
+    color: 'white',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#4F46E5',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
     marginBottom: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 })
