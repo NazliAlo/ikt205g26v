@@ -2,7 +2,7 @@ import SignOutButton from "@/components/sosial-auth-buttons/sign-out-button";
 import { supabase } from "@/lib/supabase";
 import { Note } from "@/models/note";
 import { mainScreanStyle } from "@/styles/main-screen-style";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import CreateNoteWindow from "../components/create-note-popup-window";
@@ -11,11 +11,28 @@ import NotesList from "../components/note-list";
 export default function MainScreen() {
     const [showCreateNote, setShowCreateNote] = useState(false);
     const [noteList, setNotes] = useState<Note[]>([]);
+    const [refresh, setRefresh] = useState(0);
+    const params = useLocalSearchParams();
 
-
-        useEffect(() => {
+    useEffect(() => {
         fetchNotes();
-    }, []);
+    }, [refresh]);
+    
+    useEffect(() => {
+        if (params.updatedNote) {
+            const updatedNote: Note = JSON.parse(params.updatedNote as string);
+            setNotes(prevNotes =>
+            prevNotes.map(n => (n.id === updatedNote.id ? updatedNote : n))
+        );
+     }
+    }, [params.updatedNote]);  
+
+    useEffect(() => {
+    if (params.deletedNoteId) {
+        setNotes(prevNotes => prevNotes.filter(n => n.id !== params.deletedNoteId));
+    }
+    }, [params.deletedNoteId]);
+
 
     async function fetchNotes() {
         const { data, error } = await supabase
@@ -30,27 +47,29 @@ export default function MainScreen() {
         }
     }
 
-   async function handleSaveNote(title: string, description: string) {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
+async function handleSaveNote(title: string, description: string) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
 
-        const { error } = await supabase.from("Notes").insert([
-            {
-                title,
-                description,
-                user_id: session.user.id,
-                created_at: new Date(),
-                updated_at: new Date()
-            }
-        ]);
-
-        if (!error) {
-            fetchNotes();
-        }
+  const { data, error } = await supabase.from("Notes").insert([
+    {
+      title,
+      description,
+      userId: session.user.id,
+      updatedAt: new Date()
     }
+    ]).select(); 
+
+  if (error) {
+    console.error("Failed to insert note:", error.message);
+    return;
+  }
+  setRefresh(prev => prev + 1);
+  setShowCreateNote(false);
+}
 
 
-    return (
+return (
 
         <View style={{ flex: 1 }}>
             <Text style ={mainScreanStyle.headerTitle} >Jobb notater</Text>
