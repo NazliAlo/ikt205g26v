@@ -1,8 +1,9 @@
 import SignOutButton from "@/components/sosial-auth-buttons/sign-out-button";
+import { supabase } from "@/lib/supabase";
 import { Note } from "@/models/note";
 import { mainScreanStyle } from "@/styles/main-screen-style";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import CreateNoteWindow from "../components/create-note-popup-window";
 import NotesList from "../components/note-list";
@@ -10,17 +11,42 @@ import NotesList from "../components/note-list";
 export default function MainScreen() {
     const [showCreateNote, setShowCreateNote] = useState(false);
     const [noteList, setNotes] = useState<Note[]>([]);
-    
-    function handleSaveNote(title: string, description: string) {
-        console.log("SAVE:", title, description);
-        const newNote: Note = {
-            id: Date.now().toString(), // unik id
-            title,
-            description,
-            createdAt: new Date()
-        };
-    // legg til notatet i listen
-    setNotes(prevNotes => [newNote, ...prevNotes]); // legger nye øverst
+
+
+        useEffect(() => {
+        fetchNotes();
+    }, []);
+
+    async function fetchNotes() {
+        const { data, error } = await supabase
+            .from("Notes")
+            .select("*")
+            .order("updatedAt", { ascending: false });
+
+        if (error) {
+            console.log("ERROR FETCHING NOTES:", error);
+        } else if (data) {
+            setNotes(data);
+        }
+    }
+
+   async function handleSaveNote(title: string, description: string) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+
+        const { error } = await supabase.from("Notes").insert([
+            {
+                title,
+                description,
+                user_id: session.user.id,
+                created_at: new Date(),
+                updated_at: new Date()
+            }
+        ]);
+
+        if (!error) {
+            fetchNotes();
+        }
     }
 
 

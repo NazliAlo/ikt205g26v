@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
 import { Note } from '@/models/note';
+import { router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -13,7 +13,7 @@ export default function NoteDetailScreen() {
           <View style={styles.container}>
           <Text style={styles.title}>{note.title}</Text>
           <Text style={styles.description}>{note.description}</Text>
-          <Text style={styles.date}>Created at: {note.createdAt.toString()}</Text>
+          <Text style={styles.date}>Created at: {new Date(note.updatedAt).toString()}</Text>
 
         </View>
 
