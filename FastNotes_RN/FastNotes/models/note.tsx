@@ -4,6 +4,7 @@ export type Note = {
   userId: string;
   title: string;
   description: string;
+  userEmail: string;
   createdAt: Date;
   updatedAt: string;
 };

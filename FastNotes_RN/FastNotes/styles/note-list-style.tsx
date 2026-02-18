@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export const listStyle = StyleSheet.create({
   item: {
@@ -15,5 +15,9 @@ export const listStyle = StyleSheet.create({
     fontWeight: "600",
     color: "#fff",
     padding: 12,
-  }
+  },
+  subtitle: {
+  fontSize: 14,
+  color: '#aaa',
+}
 });

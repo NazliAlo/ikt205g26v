@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { Note } from '@/models/note';
 import { popupWindow } from "@/styles/create-note-style";
 import { useEffect, useState } from "react";
-import { KeyboardAvoidingView, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, KeyboardAvoidingView, Modal, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 type CreateNoteProps = {
   visible: boolean;
@@ -27,8 +27,11 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
   if (!visible) return null;
 
   
-   async function handleSave() {
-    if (title.trim().length === 0) return;
+  async function handleSave() {
+    if (title.trim().length === 0 || description.trim().length === 0) {
+    Alert.alert("Error", "Both title and description are required");
+    return;
+  }
 
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) return;
@@ -40,6 +43,7 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
           title,
           description,
           userId: session.user.id,
+          userEmail: session.user.email,
           updatedAt: new Date()
         }
       ])

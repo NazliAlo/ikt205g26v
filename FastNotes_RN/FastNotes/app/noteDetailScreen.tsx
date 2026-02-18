@@ -78,7 +78,7 @@ export default function NoteDetailScreen() {
             Alert.alert("Error", "Could not delete note");
           } else {
             Alert.alert("Deleted", "Note deleted successfully");
-            router.replace({ pathname: '/', params: { deletedNoteId: note.id } });
+          router.replace({ pathname: '/', params: { deletedNoteId: note.id } });
           }
         }
       }
@@ -116,6 +116,7 @@ export default function NoteDetailScreen() {
         ) : (
           <Text style={styles.description}>{description}</Text>
         )}
+        <Text style={styles.user}>Created by: {note.userEmail}</Text>
 
         <Text style={styles.date}>
           Updated at: {new Date(note.updatedAt).toLocaleString()}
@@ -208,6 +209,10 @@ deleteButton: {
   backgroundColor: "#EF4444", // rød for delete
   justifyContent: "center",
   alignItems: "center",
-}
+},
+user: {
+  fontSize: 14,
+  color: '#aaa',
+},
 
 });

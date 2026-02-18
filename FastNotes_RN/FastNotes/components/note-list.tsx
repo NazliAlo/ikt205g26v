@@ -1,6 +1,6 @@
 import { Note } from "@/models/note";
 import { listStyle } from "@/styles/note-list-style";
-import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
+import { FlatList, Pressable, Text } from "react-native";
 
 type NotesListProps = {
   notes: Note[];
@@ -25,6 +25,8 @@ export default function NotesList({ notes, onPressNote }: NotesListProps) {
                 ]}
                 >
                 <Text style={listStyle.title}>{item.title}</Text>
+                <Text style={listStyle.subtitle}>By: {item.userEmail}</Text>
+
                 </Pressable>
         )}
         />
