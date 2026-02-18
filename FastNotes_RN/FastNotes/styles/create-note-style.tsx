@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native';
 
 export const popupWindow = StyleSheet.create({
   overlay: {
@@ -50,6 +50,7 @@ export const popupWindow = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
+
   },
 
   buttonRow: {

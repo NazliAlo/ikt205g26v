@@ -29,6 +29,10 @@ export default function NoteDetailScreen() {
     Alert.alert("Error", "You are not allowed to edit this note!");
     return;
   }
+  if (!title.trim() || !description.trim()) {
+  Alert.alert("Error", "Fields cannot be empty")
+  return
+  }
     const {data, error } = await supabase
       .from("Notes")
       .update({

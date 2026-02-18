@@ -80,7 +80,7 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
           />
 
           {/* Description */}
-          <Text style={popupWindow.label}>Description</Text>
+          <Text style={popupWindow.label}>Description*</Text>
           <TextInput
             style={popupWindow.textArea}
             placeholder="Write your note..."
