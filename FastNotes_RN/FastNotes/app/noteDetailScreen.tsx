@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { Note } from '@/models/note';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -100,6 +100,19 @@ export default function NoteDetailScreen() {
   >
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
       <View style={styles.container}>
+        {/* Bilde */}
+      {note.imageUrl && (
+      <Image
+        source={{ uri: note.imageUrl }}
+        style={{
+          width: "100%",
+          height: 300,
+          borderRadius: 10,
+          marginBottom: 16,
+          resizeMode: "cover",
+        }}
+      />
+        )}
         {isEditing ? (
           <TextInput
             style={styles.title}

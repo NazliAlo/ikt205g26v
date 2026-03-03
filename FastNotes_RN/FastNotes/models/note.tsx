@@ -7,4 +7,5 @@ export type Note = {
   userEmail: string;
   createdAt: Date;
   updatedAt: string;
+  imageUrl?: string | null;
 };

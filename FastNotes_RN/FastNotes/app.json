@@ -9,8 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nazli.fastnotes",
+      "infoPlist": {
+        "NSCameraUsageDescription": "The camera is used to attach images to notes"
+      }
     },
+    
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
