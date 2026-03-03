@@ -16,6 +16,8 @@ export default function NoteDetailScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
+  const [imageRatio, setImageRatio] = useState<number>(1);
+
   useEffect(() => {
   async function fetchUser() {
     const { data: { session } } = await supabase.auth.getSession();
@@ -24,6 +26,20 @@ export default function NoteDetailScreen() {
   fetchUser();
 }, []);
 
+useEffect(() => {
+  if (note.imageUrl) {
+    Image.getSize(
+      note.imageUrl,
+      (width, height) => {
+        setImageRatio(width / height);
+      },
+      (error) => {
+        console.log("Could not get image size:", error);
+        setImageRatio(1); // fallback
+      }
+    );
+  }
+}, []);
 
   async function handleUpdate() {
     if (currentUserId !== note.userId) {
@@ -64,7 +80,7 @@ export default function NoteDetailScreen() {
     return;
   }
 
-  // Bekreftelse før sletting
+  
   Alert.alert(
     "Confirm Delete",
     "Are you sure you want to delete this note?",
@@ -100,22 +116,7 @@ export default function NoteDetailScreen() {
     behavior={Platform.OS === "ios" ? "padding" : "height"}
   >
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
-      <View style={styles.container}>
-
-     {/* Bilde */}
-{note.imageUrl ? (
-  <Image
-    source={{ uri: note.imageUrl }}
-    style={{
-      width: "100%",      // fyller containeren
-      height: 300,        // fast høyde
-      borderRadius: 10,
-      marginBottom: 16,
-    }}
-    resizeMode="cover"    // resizeMode skal være egen prop, ikke i style
-  />
-) : null}
-    
+      <View style={styles.container}>    
         {isEditing ? (
           <TextInput
             style={styles.title}
@@ -142,22 +143,43 @@ export default function NoteDetailScreen() {
           Updated at: {new Date(note.updatedAt).toLocaleString()}
         </Text>
 
-         {currentUserId === note.userId && (
-      <TouchableOpacity
+     {/* Bilde */}
+      {note.imageUrl ? (
+        <View
+          style={{
+            width: "100%",
+            height: 250, 
+            backgroundColor: "#000000",
+            borderRadius: 12,
+            overflow: "hidden",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
+          <Image
+            source={{ uri: note.imageUrl }}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+            resizeMode="contain"
+          />
+        </View>
+      ) : null}
+
+    {currentUserId === note.userId && (
+    <TouchableOpacity
     style={styles.editButton}
     onPress={isEditing ? handleUpdate : () => setIsEditing(true)}
      >
     <Text style={styles.backButtonText}>{isEditing ? "Save" : "Update"}</Text>
     </TouchableOpacity>
     )}
-
-        
       </View>
     </ScrollView>
 
     {/* Buttons */}
-   
-
     {currentUserId === note.userId && (
       <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
          <Text style={styles.backButtonText}>Delete</Text>

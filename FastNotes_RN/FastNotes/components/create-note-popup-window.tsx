@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { Note } from '@/models/note';
 import { popupWindow } from "@/styles/create-note-style";
 import * as FileSystem from "expo-file-system/legacy";
+import * as ImageManipulator from "expo-image-manipulator";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -43,6 +44,19 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
   }, [visible]);
 
   if (!visible) return null;
+
+  const convertToJpeg = async (uri: string) => {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [],
+    {
+      compress: 0.8,
+      format: ImageManipulator.SaveFormat.JPEG,
+    }
+  );
+
+  return result.uri;
+  };
 
   // IMAGE VALIDATION
   const validateImage = async (uri: string) => {
@@ -114,11 +128,16 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
 
  
     if (stagedPhoto) {
-      const extension = await validateImage(stagedPhoto);  // 1️⃣ valider
-      imageUrl = await uploadImage(stagedPhoto, extension, session.user.id); // 2️⃣ upload + få publicUrl
+
+      //  Konverter alltid til JPEG
+      const convertedUri = await convertToJpeg(stagedPhoto);
+
+      // Valider (nå vil den alltid være jpg)
+      const extension = "jpg";
+
+      // Upload
+      imageUrl = await uploadImage(convertedUri, extension, session.user.id);
     }
-
-
     const { data, error: insertError } = await supabase
       .from('Notes')
       .insert([
