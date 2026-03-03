@@ -5,19 +5,18 @@ import { Alert, Button, Image, Text, View } from "react-native";
 
 type Props = {
   onPhotoTaken: (uri: string) => void;
-  onClose?: () => void; // valgfri, for å lukke modalen fra parent
+  onClose?: () => void; 
 };
 
 export default function CameraModal({ onPhotoTaken, onClose }: Props) {
-  // Kamera-tillatelse
+
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
-  // Galleri-tillatelse
   const [galleryPermission, setGalleryPermission] = useState<boolean | null>(null);
 
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const cameraRef = useRef<CameraView>(null);
 
-  // Be om galleri-tillatelse når modalen åpnes
+
   useEffect(() => {
     const getGalleryPermission = async () => {
       const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
@@ -26,9 +25,8 @@ export default function CameraModal({ onPhotoTaken, onClose }: Props) {
     getGalleryPermission();
   }, []);
 
-  // ---------------------
-  // Funksjoner for å be om tillatelser
-  // ---------------------
+
+
   const askCameraPermission = async () => {
     const result = await requestCameraPermission();
     if (!result.granted) {
@@ -65,9 +63,7 @@ export default function CameraModal({ onPhotoTaken, onClose }: Props) {
     }
   };
 
-  // ---------------------
-  // UI: Tillatelser
-  // ---------------------
+
   if (cameraPermission?.granted === false) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
@@ -111,7 +107,7 @@ export default function CameraModal({ onPhotoTaken, onClose }: Props) {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       quality: 0.8,
     });
 

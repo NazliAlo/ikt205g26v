@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function NoteDetailScreen() {
   const params = useLocalSearchParams();
   const note: Note = JSON.parse(params.note as string); // params.note is a stringified Note
+  console.log("Image URL:", note.imageUrl);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
 
@@ -100,19 +101,21 @@ export default function NoteDetailScreen() {
   >
     <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
       <View style={styles.container}>
-        {/* Bilde */}
-      {note.imageUrl && (
-      <Image
-        source={{ uri: note.imageUrl }}
-        style={{
-          width: "100%",
-          height: 300,
-          borderRadius: 10,
-          marginBottom: 16,
-          resizeMode: "cover",
-        }}
-      />
-        )}
+
+     {/* Bilde */}
+{note.imageUrl ? (
+  <Image
+    source={{ uri: note.imageUrl }}
+    style={{
+      width: "100%",      // fyller containeren
+      height: 300,        // fast høyde
+      borderRadius: 10,
+      marginBottom: 16,
+    }}
+    resizeMode="cover"    // resizeMode skal være egen prop, ikke i style
+  />
+) : null}
+    
         {isEditing ? (
           <TextInput
             style={styles.title}
