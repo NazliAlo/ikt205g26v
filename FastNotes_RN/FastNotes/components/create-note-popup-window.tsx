@@ -60,27 +60,36 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
 
   // IMAGE VALIDATION
   const validateImage = async (uri: string) => {
-    const fileInfo = await FileSystem.getInfoAsync(uri);
+  const fileInfo = await FileSystem.getInfoAsync(uri);
 
-    if (!fileInfo.exists) {
-      throw new Error("File does not exist");
-    }
+  if (!fileInfo.exists) {
+    throw {
+      type: "file",
+      message: "The selected image could not be found."
+    };
+  }
 
-    const maxSize = 15 * 1024 * 1024; // 15MB
-    if (fileInfo.size && fileInfo.size > maxSize) {
-      throw new Error("Image must be under 15MB");
-    }
+  const maxSize = 15 * 1024 * 1024; // 15MB
 
-    const allowedFormats = ["jpg", "jpeg", "png", "webp"];
-    const extension = uri.split(".").pop()?.toLowerCase();
+  if (fileInfo.size && fileInfo.size > maxSize) {
+    throw {
+      type: "size",
+      message: "The image is too large. Maximum allowed size is 15MB."
+    };
+  }
 
-    if (!extension || !allowedFormats.includes(extension)) {
-      throw new Error("Only JPG, PNG or WebP images are allowed");
-    }
+  const allowedFormats = ["jpg", "jpeg", "png", "webp"];
+  const extension = uri.split(".").pop()?.toLowerCase();
 
-    return extension;
-  };
+  if (!extension || !allowedFormats.includes(extension)) {
+    throw {
+      type: "format",
+      message: "Invalid file format. Please select a JPG, PNG or WebP image."
+    };
+  }
 
+  return extension;
+};
   // IMAGE UPLOAD
   const uploadImage = async (
     uri: string,
@@ -100,8 +109,11 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
       });
 
     if (error) {
-      throw new Error(error.message);
-    }
+  throw {
+    type: "upload",
+    message: "Upload failed. Please check your internet connection and try again."
+  };
+}
 
     const { data } = supabase.storage
       .from("note-pics")
@@ -110,7 +122,7 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
     return data.publicUrl;
   };
 
-  // ✅ HANDLE SAVE
+  //HANDLE SAVE
   async function handleSave() {
 
   if (title.trim().length === 0 || description.trim().length === 0) {
@@ -129,15 +141,14 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
  
     if (stagedPhoto) {
 
-      //  Konverter alltid til JPEG
-      const convertedUri = await convertToJpeg(stagedPhoto);
+  const convertedUri = await convertToJpeg(stagedPhoto);
 
-      // Valider (nå vil den alltid være jpg)
-      const extension = "jpg";
+  
+  await validateImage(convertedUri);
+  const extension = "jpg";
 
-      // Upload
-      imageUrl = await uploadImage(convertedUri, extension, session.user.id);
-    }
+  imageUrl = await uploadImage(convertedUri, extension, session.user.id);
+}
     const { data, error: insertError } = await supabase
       .from('Notes')
       .insert([
@@ -163,8 +174,26 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
     onClose();
 
   } catch (error: any) {
-    Alert.alert("Error", error.message);
-  } finally {
+
+  if (error?.type === "size") {
+    Alert.alert("Image Too Large", error.message);
+  } 
+  else if (error?.type === "format") {
+    Alert.alert("Invalid Image Format", error.message);
+  }
+  else if (error?.type === "upload") {
+    Alert.alert("Upload Failed", error.message);
+  }
+  else if (error?.type === "file") {
+    Alert.alert("File Error", error.message);
+  }
+  else {
+    Alert.alert(
+      "Unexpected Error",
+      "Something went wrong. Please try again."
+    );
+  }
+} finally {
     setUploading(false);
   }
 }
@@ -217,18 +246,18 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
 
           {/* Preview */}
           {stagedPhoto && (
-            <Image
-              source={{ uri: stagedPhoto }}
-              style={{
-                width: 200,
-                height: 200,
-                marginTop: 10,
-                alignSelf: 'center',
-                borderRadius: 10
-              }}
-              resizeMode="cover"
-            />
-          )}
+          <Image
+            source={{ uri: stagedPhoto }}
+            style={{
+              width: 300,          // maks bredde
+              height: 300,         // maks høyde
+              marginTop: 10,
+              alignSelf: 'center',
+              borderRadius: 10
+            }}
+            resizeMode="contain"   // beholder hele bildet
+          />
+        )}
 
           {/* Buttons */}
           <View style={popupWindow.buttonRow}>
@@ -243,7 +272,10 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
             <TouchableOpacity
               style={[
                 popupWindow.saveBtn,
-                uploading && { opacity: 0.6 }
+                uploading && {
+                  opacity: 0.5,
+                  backgroundColor: "#9CA3AF", 
+                }
               ]}
               onPress={handleSave}
               disabled={uploading}
