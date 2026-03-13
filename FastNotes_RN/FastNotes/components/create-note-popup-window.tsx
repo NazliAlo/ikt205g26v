@@ -69,7 +69,7 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
     };
   }
 
-  const maxSize = 15 * 1024 * 1024; // 15MB
+  const maxSize = 1000; // 15MB
 
   if (fileInfo.size && fileInfo.size > maxSize) {
     throw {
@@ -249,13 +249,13 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
           <Image
             source={{ uri: stagedPhoto }}
             style={{
-              width: 300,          // maks bredde
-              height: 300,         // maks høyde
+              width: 300,          
+              height: 300,         
               marginTop: 10,
               alignSelf: 'center',
               borderRadius: 10
             }}
-            resizeMode="contain"   // beholder hele bildet
+            resizeMode="contain"   
           />
         )}
 

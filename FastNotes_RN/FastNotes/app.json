@@ -9,13 +9,14 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "usesAppleSignIn": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.nazli.fastnotes",
       "infoPlist": {
-        "NSCameraUsageDescription": "The camera is used to attach images to notes"
+        "NSCameraUsageDescription": "The camera is used to attach images to notes",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
-    
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -30,7 +31,8 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
+    "plugins": 
+    [
       "expo-router",
       [
         "expo-splash-screen",
@@ -45,11 +47,18 @@
         }
       ],
       "expo-sqlite",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7be39780-095c-4813-8b8b-d545fff22151"
+      }
     }
   }
 }

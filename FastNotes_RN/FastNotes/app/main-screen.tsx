@@ -10,14 +10,13 @@ import CreateNoteWindow from "../components/create-note-popup-window";
 import NotesList from "../components/note-list";
 
 
-// Håndter notifikasjoner i forgrunn
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowAlert: true,      // vis alert-popup
-    shouldShowBanner: true,     // vis banner på iOS
-    shouldShowList: true,       // vis i notifikasjonslisten
-    shouldPlaySound: false,     // spill av lyd
-    shouldSetBadge: false,      // oppdater app-badge
+    shouldShowAlert: true,      
+    shouldShowBanner: true,   
+    shouldShowList: true,       
+    shouldPlaySound: false,    
+    shouldSetBadge: false,      
   }),
 });
 
@@ -27,7 +26,7 @@ export default function MainScreen() {
   const [refresh, setRefresh] = useState(0);
   const params = useLocalSearchParams();
 
-  // Be om notif-tillatelser når komponenten mountes
+
   useEffect(() => {
     const askPermissions = async () => {
       const { status } = await Notifications.requestPermissionsAsync();
@@ -73,18 +72,8 @@ export default function MainScreen() {
     }
   }
 
-  // ⚡ Trigger et lokalt varsel når en ny note legges til
-  const triggerLocalNotification = async (noteTitle: string) => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: `Nytt notat: ${noteTitle}`,
-        body: "Sjekk notatet ditt i appen!",
-      },
-      trigger: null, // umiddelbart
-    });
-  };
 
-  // ⚡ Oppdatert handleSaveNote som også sender varsel
+  //handleSaveNote som også sender varsel
   async function handleSaveNote(newNote: Note) {
     setNotes(prevNotes => [newNote, ...prevNotes]); // legg til på toppen
     setShowCreateNote(false);
@@ -101,9 +90,9 @@ export default function MainScreen() {
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `Nytt notat: ${title}`,
-        body: "Dette er en testnotifikasjon",
+        body: `Du har opprettet et nytt notat: ${title}`,
       },
-      trigger: null, // null = vis umiddelbart
+      trigger: null, 
     });
   };
 
