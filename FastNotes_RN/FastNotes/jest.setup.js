@@ -41,13 +41,56 @@ jest.mock("@expo/vector-icons", () => ({
 jest.mock("@/lib/supabase", () => ({
   supabase: {
     auth: {
-      getUser: jest.fn(() => Promise.resolve({ data: { user: null } })),
-      signOut: jest.fn(() => Promise.resolve({ error: null })),
+      getSession: jest.fn(() =>
+        Promise.resolve({
+          data: {
+            session: {
+              user: {
+                id: "test-user",
+                email: "test@test.com",
+              },
+            },
+          },
+          error: null,
+        })
+      ),
     },
+
     from: jest.fn(() => ({
       select: jest.fn(() => ({
-        order: jest.fn(() => Promise.resolve({ data: [], error: null })),
+        order: jest.fn(() =>
+          Promise.resolve({
+            data: [],
+            error: null,
+          })
+        ),
+      })),
+
+      insert: jest.fn(() => ({
+        select: jest.fn(() =>
+          Promise.resolve({
+            data: [
+              {
+                id: 1,
+                title: "Test title",
+                description: "Test description",
+              },
+            ],
+            error: null,
+          })
+        ),
       })),
     })),
+
+    storage: {
+      from: jest.fn(() => ({
+        upload: jest.fn(),
+        getPublicUrl: jest.fn(() => ({
+          data: { publicUrl: "test-url" },
+        })),
+      })),
+    },
   },
 }));
+
+

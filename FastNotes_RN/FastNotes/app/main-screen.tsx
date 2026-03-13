@@ -5,7 +5,7 @@ import { mainScreanStyle } from "@/styles/main-screen-style";
 import * as Notifications from "expo-notifications";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from "react-native";
 import CreateNoteWindow from "../components/create-note-popup-window";
 import NotesList from "../components/note-list";
 
@@ -100,15 +100,22 @@ export default function MainScreen() {
     <View style={{ flex: 1 }}>
       <Text style={mainScreanStyle.headerTitle}>Jobb notater</Text>
 
-      <NotesList 
-        notes={noteList}
-        onPressNote={(note: Note) =>
-          router.push({
-            pathname: '/noteDetailScreen',
-            params: { note: JSON.stringify(note) }
-          })
-        }
-      />
+      {noteList.length === 0 ? (
+      <View testID="loader">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading notes...</Text>
+      </View>
+      ) : (
+    <NotesList 
+      notes={noteList}
+      onPressNote={(note: Note) =>
+        router.push({
+          pathname: '/noteDetailScreen',
+          params: { note: JSON.stringify(note) }
+        })
+      }
+    />
+  )}
 
       {/* FAB */}
       <TouchableOpacity
