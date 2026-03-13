@@ -1,8 +1,10 @@
-import { render } from '@testing-library/react-native';
-import React from 'react';
-import MainScreen from '../app/main-screen';
+import { render, waitFor } from "@testing-library/react-native";
+import React from "react";
+import MainScreen from "../app/main-screen";
 
-test('viser ikke notater hvis bruker ikke er logget inn', () => {
-  const { queryByText } = render(<MainScreen />);
-  expect(queryByText('Jobb notater')).toBeNull();
+test("viser hovedskjerm uten krasj for ikke-innlogget bruker", async () => {
+  const { getByText } = render(<MainScreen />);
+  await waitFor(() => {
+    expect(getByText("Jobb notater")).toBeTruthy();
+  });
 });
