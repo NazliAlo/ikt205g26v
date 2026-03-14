@@ -7,13 +7,15 @@ import MainScreen from "../app/main-screen";
 test("viser loader før notater lastes og skjuler den når data kommer", async () => {
   // Mock fetchNotes
   (supabase.from as jest.Mock).mockReturnValue({
-    select: jest.fn().mockReturnValue({
-      order: jest.fn().mockResolvedValue({
+  select: jest.fn().mockReturnValue({
+    order: jest.fn().mockReturnValue({
+      range: jest.fn().mockResolvedValue({
         data: [{ id: "1", title: "Test note", description: "Desc" }],
         error: null,
       }),
     }),
-  });
+  }),
+});
 
   const { getByTestId, queryByTestId, getByText } = render(<MainScreen />);
 

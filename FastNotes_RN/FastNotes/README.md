@@ -1,31 +1,110 @@
-# Welcome to FastNotes React Native application 👋
+# FastNotes - React Native
 
-# Oppgave krav:
+FastNotes is a React Native note-taking app built with **Expo**. This document provides setup instructions, requirements, and steps to build the Android version of the app.
 
-Kamera-integrasjon:
-(5%) Permissions: Be om og håndtere tilgang til både kamera og enhetens bildegalleri.✅
-(10%) Capture & Pick: Brukeren skal kunne velge mellom å ta et nytt bilde direkte i appen, eller velge et eksisterende fra galleriet.✅
-(5%) Preview: Bildet skal vises til brukeren i notatvinduet ("staged") før brukeren bekrefter lagring/opplasting.✅
- 
+Github-repo link: https://github.com/NazliAlo/ikt205g26v.git
+---
 
-Storage & Validering:
-(10%) Client-side Validation: Koden skal sjekke at filen er under 15MB og i formatene JPG, PNG eller WebP før opplastingen til Supabase starter.✅
-(10%) Supabase Upload: Sikker opplasting av bildet til Supabase Storage (Bucket) med unike filnavn (for å unngå overskriving av andres bilder)✅
-(5%) DB Linking: Lagre URL-en til det opplastede bildet i notat-tabellen, slik at det er knyttet til riktig notat.✅
- 
+## Documentation
 
-UI/UX (Bilde & Feedback):
-(10%) Loading States: Implementere en progress bar eller spinner som viser at bildeopplasting pågår, og deaktivere lagre-knappen underveis.✅
-(10%) Aspect Ratio Handling: Bildene skal vises sammen med notatene i "Jobb Notater"-skjermen, og skal skalere pent (bildet skal ikke strekkes).✅
-(10%) Error Messaging: Appen skal gi tydelige feilmeldinger til brukeren dersom bildet er for stort, feil format, eller hvis opplastingen feiler.✅
- 
+This README covers:  
+- Project setup  
+- Dependencies installation  
+- Building the Android app  
+- Running the app on physical devices or emulators  
 
-Notifikasjoner:
-(5%) System Permissions: Be om tillatelse fra OS-et til å sende varsler/notifikasjoner til brukeren.✅
-(5%)Trigger Logic:
-Lokal Trigger (Gir 5% av 15%): Appen sender et varsel kun til den som trykker "Lagre". Logikken kjøres i app-koden etter en vellykket supabase.insert.✅
+---
 
-(5%) Content Injection: Notifikasjonen skal inneholde tittelen på det nye notatet (f.eks. "Nytt notat: [Notatets tittel]").✅
- 
+## Requirements
 
- Total: 90%
+Before running or building the app, ensure you have the following installed on your machine:
+
+- **Node.js** (>=18.x recommended)  
+- **npm** (comes with Node.js)  
+- **Expo CLI** (`npm install -g expo-cli`)  
+- **EAS CLI** (`npm install -g eas-cli`)  
+- **Visual Studio Code** (or any preferred code editor)  
+- **Android Studio** (for emulator)  
+- **Physical Android device** (optional, if you want to test on a real device)  
+
+---
+
+## Project Setup
+
+1. **Clone the project**  
+
+```bash
+git clone https://github.com/NazliAlo/ikt205g26v.git
+```
+2. **Navigate to the project folder**  
+
+```bash
+cd FastNotes_RN/FastNotes/
+```
+3. **Install dependencies**
+
+```bash
+npm install
+```
+
+## Building the Android App
+
+1. **Start the Android build using EAS**
+
+```bash
+eas build --platform android --profile development
+```
+
+**Notes:**
+
+- Build time may take 5–10 minutes.
+
+- After the build completes, you will receive a link to download the APK.
+
+- You can open this link in your web browser to install the app on your device.
+
+## Running on Android
+1. Using Android Emulator
+
+    - Install Android Studio
+
+    - Open AVD Manager (Android Virtual Device Manager)
+
+    - Create a new emulator (recommended: Pixel 6 API 33)
+
+    - Start the emulator
+
+2. Using a Physical Android Device
+- Via USB Cable
+
+    - Enable Developer Options and USB Debugging on your Android device
+
+    - Connect your device to your computer via USB 
+
+- Wirelessly
+    - Make sure your device and computer are on the same Wi-Fi network
+
+    - Enable ADB over Wi-Fi in Developer Options
+----
+
+## Oppgavekrav
+
+1. The Testing Suite (35%)
+  - Unit Test - Opprettelse & Navigasjon (10%) ✅
+  - Integration Test - Mocking & Loader (15%) ✅
+  - Auth Guard Test - Tilgangskontroll (10%) ✅
+
+2. Production Readiness & Optimization (40%)
+- (10%) Log Cleanup ✅
+- (10%) Resource Management - Kamera ✅
+- Pagination (Skalering)
+    - (10%) Endre logikken for henting av notater ✅
+    - (10%) Implementer en "Last mer"-knapp ✅
+3. Build & Dokumentasjon (25%)
+- (10%) App Fil ✅
+- (15%) Build-dokumentasjon (README) ✅
+
+
+Total: 100%
+----
+

@@ -38,6 +38,8 @@ jest.mock("@expo/vector-icons", () => ({
   FontAwesome: () => null,
 }));
 
+
+
 jest.mock("@/lib/supabase", () => ({
   supabase: {
     auth: {
@@ -58,12 +60,20 @@ jest.mock("@/lib/supabase", () => ({
 
     from: jest.fn(() => ({
       select: jest.fn(() => ({
-        order: jest.fn(() =>
-          Promise.resolve({
-            data: [],
-            error: null,
-          })
-        ),
+        order: jest.fn(() => ({
+          range: jest.fn(() =>
+            Promise.resolve({
+              data: [
+                {
+                  id: 1,
+                  title: "Test title",
+                  description: "Test description",
+                },
+              ],
+              error: null,
+            })
+          ),
+        })),
       })),
 
       insert: jest.fn(() => ({
