@@ -26,6 +26,10 @@ export default function MainScreen() {
   const [refresh, setRefresh] = useState(0);
   const params = useLocalSearchParams();
 
+  const [page, setPage] = useState(0); 
+  const [loadingMore, setLoadingMore] = useState(false); 
+  const PAGE_SIZE = 5;
+
 
   useEffect(() => {
     const askPermissions = async () => {
@@ -41,7 +45,7 @@ export default function MainScreen() {
   }, []);
 
   useEffect(() => {
-    fetchNotes();
+    fetchNotes(0);
   }, [refresh]);
     
   useEffect(() => {
@@ -59,18 +63,26 @@ export default function MainScreen() {
     }
   }, [params.deletedNoteId]);
 
-  async function fetchNotes() {
+  async function fetchNotes(pageNumber = 0) {
+    const from = pageNumber * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
     const { data, error } = await supabase
       .from("Notes")
       .select("*")
-      .order("updatedAt", { ascending: false });
+      .order("updatedAt", { ascending: false })
+      .range(from, to);
 
     if (error) {
-      console.log("ERROR FETCHING NOTES:", error);
-    } else if (data) {
-      setNotes(data);
+    Alert.alert("Feil", "Kunne ikke hente notater.");
+  } else if (data) {
+    if (pageNumber === 0) {
+      setNotes(data); // første side
+    } else {
+      setNotes(prev => [...prev, ...data]); // legg til neste sider
     }
   }
+}
+  
 
 
   //handleSaveNote som også sender varsel
@@ -106,6 +118,7 @@ export default function MainScreen() {
         <Text>Loading notes...</Text>
       </View>
       ) : (
+    <>
     <NotesList 
       notes={noteList}
       onPressNote={(note: Note) =>
@@ -115,8 +128,36 @@ export default function MainScreen() {
         })
       }
     />
-  )}
 
+    {/* Last mer knapp */}
+    <TouchableOpacity
+      onPress={async () => {
+        setLoadingMore(true);
+        const nextPage = page + 1;
+        setPage(nextPage);
+        await fetchNotes(nextPage);
+        setLoadingMore(false);
+      }}
+      style={{
+        position: "absolute",    
+        bottom: 20,               
+        alignSelf: "center",      
+        paddingVertical: 12,
+        paddingHorizontal: 24,    
+        backgroundColor: "#4F46E5",
+        borderRadius: 30,         
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {loadingMore ? (
+        <ActivityIndicator color="white" />
+      ) : (
+        <Text style={{ color: "white", fontWeight: "600" }}>Last mer</Text>
+      )}
+    </TouchableOpacity>
+    </>
+    )}
       {/* FAB */}
       <TouchableOpacity
         style={mainScreanStyle.fab}

@@ -9,7 +9,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function NoteDetailScreen() {
   const params = useLocalSearchParams();
   const note: Note = JSON.parse(params.note as string); // params.note is a stringified Note
-  console.log("Image URL:", note.imageUrl);
   const [title, setTitle] = useState(note.title);
   const [description, setDescription] = useState(note.description);
 
@@ -34,7 +33,6 @@ useEffect(() => {
         setImageRatio(width / height);
       },
       (error) => {
-        console.log("Could not get image size:", error);
         setImageRatio(1); // fallback
       }
     );
@@ -61,7 +59,6 @@ useEffect(() => {
       .select();
 
     if (error) {
-      console.log("ERROR FETCHING NOTES:", error);
       Alert.alert("Error", "Could not update note");
     } else {
       Alert.alert("Success", "Note updated");
@@ -107,7 +104,6 @@ useEffect(() => {
   );
 }
 
-  console.log(params)
   return (
 
   <SafeAreaView style={{ flex: 1 }}>

@@ -69,7 +69,7 @@ export default function CreateNoteWindow({ visible, onClose, onSave }: CreateNot
     };
   }
 
-  const maxSize = 1000; // 15MB
+  const maxSize = 15 * 1024 * 1024; // 15MB
 
   if (fileInfo.size && fileInfo.size > maxSize) {
     throw {
